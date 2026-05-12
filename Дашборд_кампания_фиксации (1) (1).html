@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пилот CR в сделку · Екатеринбург и Казань</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1419;
+  --bg-elev: #1a2028;
+  --bg-card: #161c24;
+  --border: #2a3340;
+  --border-strong: #3a4555;
+  --text: #e8ecf1;
+  --text-dim: #8a96a8;
+  --text-faint: #5a6675;
+  --accent: #4ea860;
+  --accent-bright: #6fcf80;
+  --good: #6fb96a;
+  --bad: #d96666;
+  --warn: #d4a72c;
+  --info: #5b9bd5;
+  --client: #8a96a8;
+  --agent: #d96666;
+  --avito: #d4a72c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  font-size: 14px; line-height: 1.5; min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(78, 168, 96, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(91, 155, 213, 0.03) 0%, transparent 50%);
+}
+.container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+header {
+  border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
+}
+.title-block h1 {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 900;
+  font-size: 56px; line-height: 0.95; letter-spacing: 0.005em;
+  color: var(--text); text-transform: uppercase;
+}
+.title-block h1 .green { color: var(--accent-bright); }
+.title-block .badge {
+  display: inline-block; margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--accent-bright); letter-spacing: 0.15em; text-transform: uppercase;
+  border: 1px solid var(--accent); padding: 3px 8px;
+}
+.meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--text-dim); text-align: right;
+}
+.meta .row { display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 4px; }
+.meta .label { color: var(--text-faint); }
+.meta .val { color: var(--text); }
+section { margin-bottom: 48px; scroll-margin-top: 70px; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.section-head h2 {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+  font-size: 32px; letter-spacing: 0.01em;
+  color: var(--text); text-transform: uppercase; line-height: 1;
+}
+.section-head .sub {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase;
+}
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.kpi { background: var(--bg-card); padding: 24px 20px; position: relative; }
+.kpi.primary { padding: 28px 24px; }
+.kpi-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 12px;
+}
+.kpi-value {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+  font-size: 48px; line-height: 1; color: var(--text); margin-bottom: 6px;
+}
+.kpi-value.small { font-size: 32px; }
+.kpi-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+.kpi-cr {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--accent-bright); font-weight: 700; margin-top: 4px; letter-spacing: 0.05em;
+}
+.kpi.good .kpi-value { color: var(--good); }
+.kpi.bad .kpi-value { color: var(--bad); }
+.kpi.warn .kpi-value { color: var(--warn); }
+.kpi.accent .kpi-value { color: var(--accent-bright); }
+.kpi-secondary {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border); border-top: none;
+}
+.kpi-secondary .kpi { padding: 16px 20px; background: var(--bg-elev); }
+.kpi-secondary .kpi-value { font-size: 28px; }
+.funnel { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
+.funnel-row {
+  display: grid; grid-template-columns: 1fr 80px 70px 80px;
+  align-items: center; padding: 14px 0;
+  border-bottom: 1px dashed var(--border); gap: 16px;
+}
+.funnel-row:last-child { border-bottom: none; }
+.funnel-row .stage { font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 12px; }
+.funnel-row .stage-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--text-faint); width: 18px;
+}
+.funnel-row .bar-wrap {
+  grid-column: 1 / 5; height: 4px; background: var(--bg-elev);
+  margin-top: 8px; position: relative;
+}
+.funnel-row .bar {
+  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  transition: width 1s cubic-bezier(.25,.46,.45,.94);
+}
+.funnel-row .count, .funnel-row .pct, .funnel-row .conv {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; text-align: right;
+}
+.funnel-row .count { color: var(--text); font-weight: 500; }
+.funnel-row .pct { color: var(--text-dim); }
+.funnel-row .conv { color: var(--accent-bright); font-weight: 500; }
+.funnel-row.crit .stage { color: var(--bad); font-weight: 500; }
+.funnel-row.crit .conv { color: var(--bad); }
+.table-wrap { background: var(--bg-card); border: 1px solid var(--border); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--text-dim); text-align: right;
+  padding: 14px 12px; border-bottom: 1px solid var(--border-strong);
+  background: var(--bg-elev); white-space: nowrap;
+  cursor: pointer; user-select: none; position: relative;
+  vertical-align: bottom; line-height: 1.3;
+}
+th:first-child { text-align: left; }
+th.no-sort { cursor: default; }
+th.no-sort:hover { color: var(--text-dim); }
+th:hover { color: var(--accent-bright); }
+th .th-main { display: block; color: var(--text); font-weight: 700; font-size: 13px; }
+th .th-sub { display: block; font-size: 10px; color: var(--text-faint); font-weight: 400; margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+th .sort-ind { display: inline-block; width: 8px; margin-left: 4px; color: var(--text-faint); }
+td {
+  padding: 12px; border-bottom: 1px solid var(--border); text-align: right;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text);
+}
+td:first-child {
+  text-align: left; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500;
+}
+tr:last-child td { border-bottom: none; }
+tr.total td {
+  background: var(--bg-elev); font-weight: 600; color: var(--accent-bright);
+  border-top: 1px solid var(--border-strong);
+}
+tr:hover td { background: rgba(78, 168, 96, 0.04); }
+.cell-bar { position: relative; display: inline-block; width: 100%; text-align: right; }
+.cell-bar-fg {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  height: 18px; background: rgba(78, 168, 96, 0.15);
+  z-index: 0; border-left: 2px solid var(--accent);
+}
+.cell-bar-fg.good { background: rgba(111, 185, 106, 0.15); border-color: var(--good); }
+.cell-bar-fg.bad { background: rgba(217, 102, 102, 0.15); border-color: var(--bad); }
+.cell-bar-val { position: relative; z-index: 1; padding-right: 4px; }
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid; border-radius: 2px; display: inline-block;
+}
+.tag-client { color: var(--client); border-color: var(--client); }
+.tag-agent { color: var(--agent); border-color: var(--agent); }
+.tag-avito { color: var(--avito); border-color: var(--avito); }
+.tag-other { color: var(--text-faint); border-color: var(--text-faint); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.col-card { background: var(--bg-card); border: 1px solid var(--border); padding: 20px; }
+.col-card h3 {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+  font-size: 20px; margin-bottom: 16px; color: var(--text);
+  letter-spacing: 0.01em; text-transform: uppercase;
+}
+.col-card h3 .badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--text-faint); margin-left: 8px; font-weight: 400;
+  letter-spacing: 0.05em; text-transform: lowercase;
+}
+.donut-wrap { display: flex; align-items: center; gap: 24px; }
+.donut { flex-shrink: 0; width: 160px; height: 160px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.legend-item {
+  display: grid; grid-template-columns: 12px 1fr auto;
+  gap: 10px; align-items: center; font-size: 13px;
+}
+.legend-dot { width: 12px; height: 12px; }
+.legend-name { color: var(--text); }
+.legend-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); }
+.insights { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
+.insight {
+  padding: 14px 0; border-bottom: 1px dashed var(--border);
+  display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: flex-start;
+}
+.insight:last-child { border-bottom: none; }
+.insight-marker {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+  font-size: 22px; color: var(--accent-bright); line-height: 1.3;
+}
+.insight-text { font-size: 14px; line-height: 1.55; color: var(--text); }
+.insight-text b { color: var(--accent-bright); font-weight: 600; }
+.insight-text .crit { color: var(--bad); font-weight: 600; }
+.insight-text .good { color: var(--good); font-weight: 600; }
+.struct-row {
+  display: grid; grid-template-columns: 1fr 60px 60px 120px;
+  gap: 12px; padding: 10px 0;
+  border-bottom: 1px dashed var(--border); align-items: center; font-size: 13px;
+}
+.struct-row:last-child { border-bottom: none; }
+.struct-row .name { color: var(--text); }
+.struct-row .name.good { color: var(--good); font-weight: 500; }
+.struct-row .name.bad { color: var(--bad); font-weight: 500; }
+.struct-row .name.warn { color: var(--warn); }
+.struct-row .cnt { font-family: 'JetBrains Mono', monospace; text-align: right; color: var(--text); }
+.struct-row .pct { font-family: 'JetBrains Mono', monospace; text-align: right; font-size: 12px; color: var(--text-dim); }
+.struct-bar { height: 6px; background: var(--bg-elev); position: relative; }
+.struct-bar-fg { position: absolute; left: 0; top: 0; bottom: 0; background: var(--info); }
+.struct-bar-fg.good { background: var(--good); }
+.struct-bar-fg.bad { background: var(--bad); }
+.struct-bar-fg.warn { background: var(--warn); }
+.struct-bar-fg.neutral { background: var(--info); }
+nav.toc {
+  position: sticky; top: 0;
+  background: rgba(15, 20, 25, 0.95); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border); padding: 12px 24px;
+  margin: -32px -24px 32px; z-index: 10; display: flex; gap: 24px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase; overflow-x: auto;
+}
+nav.toc a {
+  color: var(--text-dim); text-decoration: none; white-space: nowrap;
+  border-bottom: 1px solid transparent; padding-bottom: 2px; transition: all .2s;
+}
+nav.toc a:hover { color: var(--accent-bright); border-color: var(--accent-bright); }
+footer {
+  margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--text-faint); letter-spacing: 0.08em;
+  text-transform: uppercase; text-align: center;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.kpi, .funnel, .table-wrap, .col-card, .insights {
+  animation: fade-in .6s cubic-bezier(.25,.46,.45,.94) backwards;
+}
+.kpi:nth-child(1) { animation-delay: .05s; }
+.kpi:nth-child(2) { animation-delay: .1s; }
+.kpi:nth-child(3) { animation-delay: .15s; }
+.kpi:nth-child(4) { animation-delay: .2s; }
+.fate-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 24px; display: grid;
+  grid-template-columns: auto 1fr; gap: 32px; align-items: center;
+}
+.fate-num {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+  font-size: 80px; color: var(--bad); line-height: 1;
+}
+.fate-text { color: var(--text); font-size: 15px; line-height: 1.6; }
+.fate-text b { color: var(--accent-bright); font-weight: 700; }
+.fate-text .crit { color: var(--bad); font-weight: 700; }
+.fate-text .good { color: var(--good); font-weight: 700; }
+@media (max-width: 900px) {
+  .kpi-grid, .kpi-secondary { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .title-block h1 { font-size: 36px; }
+  .container { padding: 16px; }
+  .fate-block { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="title-block">
+    <h1>Пилот CR в&nbsp;сделку:<br><span class="green">Екатеринбург и&nbsp;Казань</span></h1>
+    <div class="badge">→ Метрики на актуальные статусы заявок</div>
+  </div>
+  <div class="meta">
+    <div class="row"><span class="label">Период</span><span class="val">20.04 – 04.05.2026</span></div>
+    <div class="row"><span class="label">Заявок / клиентов</span><span class="val" id="m-total">—</span></div>
+    <div class="row"><span class="label">Менеджеров</span><span class="val">6</span></div>
+    <div class="row"><span class="label">Обновлено</span><span class="val" id="m-date">—</span></div>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#kpi">KPI</a>
+  <a href="#fate">Обзвон vs Факт</a>
+  <a href="#cancels">Отмены</a>
+  <a href="#funnel">Воронка</a>
+  <a href="#regions">Регионы</a>
+  <a href="#mgrs">Менеджеры</a>
+  <a href="#structure">Структура итогов</a>
+  <a href="#insights">Выводы</a>
+</nav>
+
+<section id="kpi">
+  <div class="section-head">
+    <h2>Ключевые показатели</h2>
+    <div class="sub">→ Актуальные данные · Считаем по&nbsp;клиентам</div>
+  </div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <div class="kpi-secondary" id="kpi-secondary"></div>
+</section>
+
+<section id="fate">
+  <div class="section-head">
+    <h2>Обзвон vs Факт</h2>
+    <div class="sub">→ Что обещали в&nbsp;обзвоне → Что получилось</div>
+  </div>
+  <div class="fate-block" id="fate-block"></div>
+</section>
+
+<section id="cancels">
+  <div class="section-head">
+    <h2>Структура причин отмен</h2>
+    <div class="sub" id="cancels-sub">→ Актуально · Считаем по клиентам</div>
+  </div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h3>По типу инициатора <span class="badge">кто отменил</span></h3>
+      <div class="donut-wrap">
+        <svg class="donut" viewBox="0 0 42 42" id="donut"></svg>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+    </div>
+
+    <div class="col-card">
+      <h3>По регионам <span class="badge">распределение типов</span></h3>
+      <div class="table-wrap" style="border:none;"><table id="t-otm-reg"></table></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <div class="col-card">
+      <h3>Детально по причинам</h3>
+      <div class="table-wrap" style="border:none;"><table id="t-reasons"></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="funnel">
+  <div class="section-head">
+    <h2>Воронка кампании</h2>
+    <div class="sub">→ От заявки до сделки</div>
+  </div>
+  <div class="funnel" id="funnel-block"></div>
+</section>
+
+<section id="regions">
+  <div class="section-head">
+    <h2>В&nbsp;разрезе регионов</h2>
+    <div class="sub">→ Екатеринбург vs Казань · Актуальные данные</div>
+  </div>
+  <div class="table-wrap"><table id="t-regions"></table></div>
+</section>
+
+<section id="mgrs">
+  <div class="section-head">
+    <h2>В&nbsp;разрезе менеджеров</h2>
+    <div class="sub">→ Сортировка по клику на&nbsp;заголовок</div>
+  </div>
+  <div class="table-wrap"><table id="t-mgrs"></table></div>
+
+  <div style="margin-top: 16px;">
+    <div class="col-card">
+      <h3>Менеджеры × регионы <span class="badge">CR в&nbsp;бронь+ и сделку</span></h3>
+      <div class="table-wrap" style="border:none;"><table id="t-mgr-reg"></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="structure">
+  <div class="section-head">
+    <h2>Структура итогов диалога</h2>
+    <div class="sub">→ Что зафиксировали менеджеры в&nbsp;обзвоне</div>
+  </div>
+  <div class="col-card" id="struct-block"></div>
+</section>
+
+<section id="insights">
+  <div class="section-head">
+    <h2>Краткие выводы</h2>
+    <div class="sub">→ Что важно</div>
+  </div>
+  <div class="insights" id="insights-block"></div>
+</section>
+
+<footer>
+  Внутренний отчёт · Поддержка · Пилот «CR в сделку» · Актуально на 2026-05-12
+</footer>
+
+</div>
+
+<script>
+const DATA = {"total_apps": 830, "total_clients": 793, "obr": 466, "obr_p": 0.5614457831325301, "usp": 417, "usp_p": 0.5024096385542168, "actual_deal": 33, "cr_deal": 0.0416141235813367, "actual_pure_br": 13, "actual_br_plus": 46, "cr_br_plus": 0.058007566204287514, "actual_otm": 70, "actual_otm_p": 0.08827238335435057, "obz_br": 28, "obz_otm": 20, "chat": 152, "nps": 149, "funnel": [["Всего заявок в кампании", 830], ["Заявки в обработке (есть итог)", 466], ["Успешный контакт с агентом", 417], ["Содержательный диалог состоялся", 70], ["Бронь+ (актуально, клиентов)", 46], ["Сделка прошла (Дата ДДУ, клиентов)", 33]], "structure": [["Вышли на бронь (обзвон)", 28, "good"], ["Ждём заявку на бронь", 2, "good"], ["Диалог состоялся", 70, "neutral"], ["Уточняем статус в чате", 152, "neutral"], ["Не прошёл срок", 149, "warn"], ["Отправлены акции / комиссии", 25, "neutral"], ["Перезвон", 13, "warn"], ["Недозвон", 58, "warn"], ["Агентство", 10, "warn"], ["Просили не звонить", 10, "bad"], ["Отмена заявки (по обзвону)", 20, "bad"]], "status_distribution": [{"status": "Фиксация согласована", "count": 628, "p": 0.7919293820933165}, {"status": "Отмена", "count": 70, "p": 0.08827238335435057}, {"status": "Фиксация не согласована", "count": 22, "p": 0.027742749054224466}, {"status": "Фиксация на согласовании", "count": 20, "p": 0.025220680958385876}, {"status": "Бронирование подтверждено", "count": 18, "p": 0.02269861286254729}, {"status": "Заявка на вознаграждение", "count": 10, "p": 0.012610340479192938}, {"status": "Вознаграждение выплатили", "count": 10, "p": 0.012610340479192938}, {"status": "Фиксация в работе", "count": 7, "p": 0.008827238335435058}, {"status": "Вознаграждение ожидает оплаты", "count": 6, "p": 0.007566204287515763}, {"status": "Бронирование в работе", "count": 1, "p": 0.0012610340479192938}, {"status": "Бронирование на согласовании", "count": 1, "p": 0.0012610340479192938}], "regions": [{"name": "Екатеринбург", "n_apps": 459, "n_cli": 436, "obr": 263, "obr_p": 0.5729847494553377, "usp": 250, "usp_p": 0.5446623093681917, "otm": 50, "otm_p": 0.11467889908256881, "br_plus": 31, "pure_br": 8, "sdl": 23, "cr_br": 0.07110091743119266, "cr_deal": 0.052752293577981654}, {"name": "Казань", "n_apps": 371, "n_cli": 357, "obr": 203, "obr_p": 0.5471698113207547, "usp": 167, "usp_p": 0.4501347708894879, "otm": 20, "otm_p": 0.056022408963585436, "br_plus": 15, "pure_br": 5, "sdl": 10, "cr_br": 0.04201680672268908, "cr_deal": 0.028011204481792718}], "mgrs": [{"name": "Александра Ли", "n_apps": 52, "n_cli": 49, "usp": 33, "usp_p": 0.6346153846153846, "dial": 4, "dial_p": 0.07692307692307693, "ned": 16, "chat": 6, "obz_br": 2, "br_plus": 2, "cr_br": 0.04081632653061224, "sdl": 1, "cr_deal": 0.02040816326530612, "otm": 4, "otm_p": 0.08163265306122448}, {"name": "Балашов Артём", "n_apps": 195, "n_cli": 189, "usp": 181, "usp_p": 0.9282051282051282, "dial": 32, "dial_p": 0.1641025641025641, "ned": 17, "chat": 67, "obz_br": 15, "br_plus": 18, "cr_br": 0.09523809523809523, "sdl": 11, "cr_deal": 0.0582010582010582, "otm": 31, "otm_p": 0.164021164021164}, {"name": "Марченко Юлия", "n_apps": 127, "n_cli": 119, "usp": 108, "usp_p": 0.8503937007874016, "dial": 11, "dial_p": 0.08661417322834646, "ned": 1, "chat": 44, "obz_br": 4, "br_plus": 11, "cr_br": 0.09243697478991597, "sdl": 10, "cr_deal": 0.08403361344537816, "otm": 16, "otm_p": 0.13445378151260504}, {"name": "Праник Влада", "n_apps": 43, "n_cli": 43, "usp": 32, "usp_p": 0.7441860465116279, "dial": 2, "dial_p": 0.046511627906976744, "ned": 1, "chat": 17, "obz_br": 0, "br_plus": 0, "cr_br": 0.0, "sdl": 0, "cr_deal": 0.0, "otm": 2, "otm_p": 0.046511627906976744}, {"name": "Рабец Ирина", "n_apps": 59, "n_cli": 57, "usp": 53, "usp_p": 0.8983050847457628, "dial": 21, "dial_p": 0.3559322033898305, "ned": 23, "chat": 18, "obz_br": 5, "br_plus": 6, "cr_br": 0.10526315789473684, "sdl": 4, "cr_deal": 0.07017543859649122, "otm": 2, "otm_p": 0.03508771929824561}, {"name": "Свиридова Анастасия", "n_apps": 15, "n_cli": 15, "usp": 10, "usp_p": 0.6666666666666666, "dial": 0, "dial_p": 0.0, "ned": 0, "chat": 0, "obz_br": 2, "br_plus": 3, "cr_br": 0.2, "sdl": 3, "cr_deal": 0.2, "otm": 5, "otm_p": 0.3333333333333333}], "mgr_reg": [{"name": "Александра Ли", "ekb_n": 0, "ekb_br": 0, "ekb_cr_br": 0, "ekb_sdl": 0, "ekb_cr_deal": 0, "kzn_n": 49, "kzn_br": 2, "kzn_cr_br": 0.04081632653061224, "kzn_sdl": 1, "kzn_cr_deal": 0.02040816326530612}, {"name": "Балашов Артём", "ekb_n": 143, "ekb_br": 12, "ekb_cr_br": 0.08391608391608392, "ekb_sdl": 9, "ekb_cr_deal": 0.06293706293706294, "kzn_n": 46, "kzn_br": 6, "kzn_cr_br": 0.13043478260869565, "kzn_sdl": 2, "kzn_cr_deal": 0.043478260869565216}, {"name": "Марченко Юлия", "ekb_n": 106, "ekb_br": 10, "ekb_cr_br": 0.09433962264150944, "ekb_sdl": 9, "ekb_cr_deal": 0.08490566037735849, "kzn_n": 13, "kzn_br": 1, "kzn_cr_br": 0.07692307692307693, "kzn_sdl": 1, "kzn_cr_deal": 0.07692307692307693}, {"name": "Праник Влада", "ekb_n": 0, "ekb_br": 0, "ekb_cr_br": 0, "ekb_sdl": 0, "ekb_cr_deal": 0, "kzn_n": 43, "kzn_br": 0, "kzn_cr_br": 0.0, "kzn_sdl": 0, "kzn_cr_deal": 0.0}, {"name": "Рабец Ирина", "ekb_n": 25, "ekb_br": 5, "ekb_cr_br": 0.2, "ekb_sdl": 3, "ekb_cr_deal": 0.12, "kzn_n": 32, "kzn_br": 1, "kzn_cr_br": 0.03125, "kzn_sdl": 1, "kzn_cr_deal": 0.03125}, {"name": "Свиридова Анастасия", "ekb_n": 0, "ekb_br": 0, "ekb_cr_br": 0, "ekb_sdl": 0, "ekb_cr_deal": 0, "kzn_n": 15, "kzn_br": 3, "kzn_cr_br": 0.2, "kzn_sdl": 3, "kzn_cr_deal": 0.2}], "otm_types": [{"type": "Клиент", "count": 53, "p_otm": 0.7571428571428571, "p_all": 0.06683480453972257}, {"type": "Авито", "count": 13, "p_otm": 0.18571428571428572, "p_all": 0.01639344262295082}, {"type": "Агент", "count": 4, "p_otm": 0.05714285714285714, "p_all": 0.005044136191677175}], "otm_reasons": [{"reason": "Клиент: передумал покупать/отказывается комментировать", "count": 17, "p_otm": 0.24285714285714285, "p_all": 0.021437578814627996, "type": "Клиент"}, {"reason": "Клиент: выбор в пользу вторички", "count": 13, "p_otm": 0.18571428571428572, "p_all": 0.01639344262295082, "type": "Клиент"}, {"reason": "Клиент: отменил/отложил покупку из-за личных обстоятельств", "count": 11, "p_otm": 0.15714285714285714, "p_all": 0.013871374527112233, "type": "Клиент"}, {"reason": "Клиент: отказался от работы с агентом/заключил сделку без агента", "count": 7, "p_otm": 0.1, "p_all": 0.008827238335435058, "type": "Клиент"}, {"reason": "Авито: закрытие в пользу успешной заявки", "count": 5, "p_otm": 0.07142857142857142, "p_all": 0.006305170239596469, "type": "Авито"}, {"reason": "Авито: ушел к др. агрегатору/напрямую к застройщику", "count": 4, "p_otm": 0.05714285714285714, "p_all": 0.005044136191677175, "type": "Авито"}, {"reason": "Агент: не выходит на связь", "count": 3, "p_otm": 0.04285714285714286, "p_all": 0.0037831021437578815, "type": "Агент"}, {"reason": "Авито: клиент не уникальный", "count": 3, "p_otm": 0.04285714285714286, "p_all": 0.0037831021437578815, "type": "Авито"}, {"reason": "Клиент: нет средств", "count": 2, "p_otm": 0.02857142857142857, "p_all": 0.0025220680958385876, "type": "Клиент"}, {"reason": "Клиент: перестал выходить на связь", "count": 2, "p_otm": 0.02857142857142857, "p_all": 0.0025220680958385876, "type": "Клиент"}, {"reason": "Клиент: ждет продажи своей квартиры", "count": 1, "p_otm": 0.014285714285714285, "p_all": 0.0012610340479192938, "type": "Клиент"}, {"reason": "Авито: нет нужного застройщика/ЖК", "count": 1, "p_otm": 0.014285714285714285, "p_all": 0.0012610340479192938, "type": "Авито"}, {"reason": "Агент: дубль заявки", "count": 1, "p_otm": 0.014285714285714285, "p_all": 0.0012610340479192938, "type": "Агент"}], "otm_reg": [{"type": "Авито", "ekb": 6, "ekb_p": 0.12, "kzn": 7, "kzn_p": 0.35}, {"type": "Агент", "ekb": 2, "ekb_p": 0.04, "kzn": 2, "kzn_p": 0.1}, {"type": "Клиент", "ekb": 42, "ekb_p": 0.84, "kzn": 11, "kzn_p": 0.55}], "ekb_otm_total": 50, "kzn_otm_total": 20, "fate": {"obz_br_count": 28, "obz_br_unique_cli": 28, "fate_br_plus": 23, "fate_deal": 15, "fate_otm": 1, "fate_stuck_fix": 4}};
+
+const fmt = {
+  num: (n) => n.toLocaleString('ru-RU'),
+  pct: (n, d=1) => (n*100).toFixed(d).replace('.',',') + '%',
+  pct2: (n) => (n*100).toFixed(2).replace('.',',') + '%',
+};
+
+document.getElementById('m-total').textContent = fmt.num(DATA.total_apps) + ' / ' + fmt.num(DATA.total_clients);
+document.getElementById('m-date').textContent = new Date().toLocaleDateString('ru-RU');
+
+// ==== KPI ====
+const kpiMain = [
+  { label: 'Заявок · клиентов', value: fmt.num(DATA.total_apps), sub: fmt.num(DATA.total_clients) + ' уник. клиентов', cls: '' },
+  { label: '% отработанных заявок', value: fmt.pct(DATA.obr_p), sub: fmt.num(DATA.obr) + ' заявок', cls: DATA.obr_p > 0.7 ? 'good' : 'warn' },
+  { label: '% успешных контактов', value: fmt.pct(DATA.usp_p), sub: fmt.num(DATA.usp) + ' агентов', cls: DATA.usp_p > 0.6 ? 'good' : 'warn' },
+  { label: 'CR в сделку', value: fmt.pct(DATA.cr_deal), sub: fmt.num(DATA.actual_deal) + ' клиентов · Дата ДДУ', cls: DATA.cr_deal > 0.03 ? 'good' : DATA.cr_deal > 0.01 ? 'warn' : 'bad' },
+];
+document.getElementById('kpi-grid').innerHTML = kpiMain.map(k => `
+  <div class="kpi primary ${k.cls}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-value">${k.value}</div>
+    ${k.sub ? `<div class="kpi-sub">${k.sub}</div>` : ''}
+  </div>
+`).join('');
+
+const kpiSec = [
+  { label: 'Отмен клиентов', value: fmt.num(DATA.actual_otm), cr: fmt.pct(DATA.actual_otm_p) + ' от клиентов', cls: 'bad' },
+  { label: 'В брони (без ДДУ)', value: fmt.num(DATA.actual_pure_br), cr: 'не дошли до сделки', cls: 'warn' },
+  { label: 'Бронь+ (всего)', value: fmt.num(DATA.actual_br_plus), cr: 'CR в бронь+: ' + fmt.pct(DATA.cr_br_plus), cls: 'good' },
+  { label: 'Сделок прошло', value: fmt.num(DATA.actual_deal), cr: 'CR в сделку: ' + fmt.pct(DATA.cr_deal), cls: DATA.actual_deal > 0 ? 'good' : 'bad' },
+];
+document.getElementById('kpi-secondary').innerHTML = kpiSec.map(k => `
+  <div class="kpi ${k.cls}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-value small">${k.value}</div>
+    ${k.cr ? `<div class="kpi-cr">${k.cr}</div>` : ''}
+  </div>
+`).join('');
+
+// ==== Fate (обзвон vs факт) ====
+const fate = DATA.fate;
+document.getElementById('fate-block').innerHTML = `
+  <div>
+    <div class="fate-num">${fate.fate_stuck_fix}<span style="color:var(--text-dim); font-size:0.4em">/${fate.obz_br_count}</span></div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); text-align:center; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px;">Зависло на фиксации</div>
+  </div>
+  <div class="fate-text">
+    В обзвоне менеджеры по <b>${fate.obz_br_count}</b> заявкам отметили «Вышли на бронь».<br><br>
+    Что стало на самом деле: <b class="good">${fate.fate_deal}</b> дошли до сделки (есть ДДУ), <b>${fate.fate_br_plus}</b> в брони или дальше, <span class="crit">${fate.fate_stuck_fix}</span> до сих пор в статусе «Фиксация*» — то есть агент сказал «выходим на бронь», но заявку на бронирование так и не подал. Ещё <span class="crit">${fate.fate_otm}</span> отменились.<br><br>
+    <span style="color: var(--text-dim); font-size: 13px;">→ Бронь = не «обещание агента», а оставленная заявка на бронирование. Здесь основной разрыв.</span>
+  </div>
+`;
+
+// ==== Helper ====
+function th(main, sub, key, noSort=false) {
+  return `<th ${noSort ? 'class="no-sort"' : `data-key="${key}"`}><span class="th-main">${main}</span>${sub ? `<span class="th-sub">${sub}</span>` : ''}</th>`;
+}
+
+// ==== Cancels ====
+document.getElementById('cancels-sub').textContent = '→ Актуально · Уник. клиентов с отменой: ' + DATA.actual_otm;
+
+const TYPE_COLORS = {
+  'Клиент': 'var(--client)', 'Агент': 'var(--agent)',
+  'Авито': 'var(--avito)', 'Не указано': 'var(--text-faint)',
+};
+const TYPE_TAG = {
+  'Клиент': 'tag-client', 'Агент': 'tag-agent',
+  'Авито': 'tag-avito', 'Не указано': 'tag-other',
+};
+
+function makeDonut(items, totalCount) {
+  let acc = 0;
+  const segs = items.map(it => {
+    const dash = (it.count / totalCount) * 100;
+    const seg = `<circle r="15.915" cx="21" cy="21" fill="transparent" stroke="${TYPE_COLORS[it.type]}" stroke-width="6" stroke-dasharray="${dash} ${100-dash}" stroke-dashoffset="${-acc}"></circle>`;
+    acc += dash;
+    return seg;
+  }).join('');
+  return `
+    <circle r="15.915" cx="21" cy="21" fill="transparent" stroke="var(--bg-elev)" stroke-width="6"></circle>
+    ${segs}
+    <text x="21" y="20" text-anchor="middle" font-family="Big Shoulders Display, sans-serif" font-size="8" fill="var(--text)" font-weight="800">${totalCount}</text>
+    <text x="21" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="3" fill="var(--text-dim)">отмен</text>
+  `;
+}
+document.getElementById('donut').innerHTML = makeDonut(DATA.otm_types, DATA.actual_otm);
+
+document.getElementById('donut-legend').innerHTML = DATA.otm_types.map(t => `
+  <div class="legend-item">
+    <span class="legend-dot" style="background:${TYPE_COLORS[t.type]}"></span>
+    <span class="legend-name">${t.type}</span>
+    <span class="legend-val">${t.count} · ${fmt.pct(t.p_otm, 0)}</span>
+  </div>
+`).join('');
+
+document.getElementById('t-reasons').innerHTML = `
+  <thead><tr>
+    ${th('Причина отмены', '', '', true)}
+    ${th('Тип', 'инициатор', '', true)}
+    ${th('Кол-во', 'клиентов', '', true)}
+    ${th('% от отмен', '', '', true)}
+    ${th('% от клиентов', '', '', true)}
+  </tr></thead>
+  <tbody>
+    ${DATA.otm_reasons.map(r => `
+      <tr>
+        <td style="font-size:12px; font-family: 'IBM Plex Sans', sans-serif;">${r.reason}</td>
+        <td style="text-align:left;"><span class="tag ${TYPE_TAG[r.type]}">${r.type}</span></td>
+        <td>${fmt.num(r.count)}</td>
+        <td>${fmt.pct(r.p_otm)}</td>
+        <td>${fmt.pct2(r.p_all)}</td>
+      </tr>
+    `).join('')}
+  </tbody>
+`;
+
+document.getElementById('t-otm-reg').innerHTML = `
+  <thead><tr>
+    ${th('Тип', 'инициатор', '', true)}
+    ${th('Екатеринбург', 'кол-во', '', true)}
+    ${th('%', 'от Екб', '', true)}
+    ${th('Казань', 'кол-во', '', true)}
+    ${th('%', 'от Каз', '', true)}
+  </tr></thead>
+  <tbody>
+    ${DATA.otm_reg.map(r => `
+      <tr>
+        <td><span class="tag ${TYPE_TAG[r.type]}">${r.type}</span></td>
+        <td>${fmt.num(r.ekb)}</td>
+        <td>${r.ekb > 0 ? fmt.pct(r.ekb_p, 0) : '—'}</td>
+        <td>${fmt.num(r.kzn)}</td>
+        <td>${r.kzn > 0 ? fmt.pct(r.kzn_p, 0) : '—'}</td>
+      </tr>
+    `).join('')}
+    <tr class="total">
+      <td>ИТОГО</td>
+      <td>${fmt.num(DATA.ekb_otm_total)}</td>
+      <td>100%</td>
+      <td>${fmt.num(DATA.kzn_otm_total)}</td>
+      <td>100%</td>
+    </tr>
+  </tbody>
+`;
+
+// ==== Funnel ====
+const funnelHtml = DATA.funnel.map((row, i) => {
+  const [stage, count] = row;
+  const pct = count / DATA.total_apps;
+  const prev = i > 0 ? DATA.funnel[i-1][1] : null;
+  const conv = i > 0 && prev > 0 ? count/prev : null;
+  const isCrit = i >= DATA.funnel.length - 1 && conv !== null && conv < 0.2;
+  return `
+    <div class="funnel-row ${isCrit ? 'crit' : ''}">
+      <div class="stage"><span class="stage-num">${String(i+1).padStart(2,'0')}</span>${stage}</div>
+      <div class="count">${fmt.num(count)}</div>
+      <div class="pct">${fmt.pct(pct)}</div>
+      <div class="conv">${conv !== null ? fmt.pct(conv) : '—'}</div>
+      <div class="bar-wrap"><div class="bar" style="width: ${pct*100}%"></div></div>
+    </div>
+  `;
+}).join('');
+document.getElementById('funnel-block').innerHTML = funnelHtml;
+
+// ==== Regions ====
+const regions = DATA.regions;
+const totalReg = {
+  name: 'ИТОГО', n_apps: DATA.total_apps, n_cli: DATA.total_clients,
+  obr: DATA.obr, obr_p: DATA.obr_p, usp: DATA.usp, usp_p: DATA.usp_p,
+  otm: DATA.actual_otm, otm_p: DATA.actual_otm_p,
+  br_plus: DATA.actual_br_plus, cr_br: DATA.cr_br_plus,
+  sdl: DATA.actual_deal, cr_deal: DATA.cr_deal,
+};
+document.getElementById('t-regions').innerHTML = `
+  <thead><tr>
+    ${th('Регион', '', '', true)}
+    ${th('Заявок', 'всего', '', true)}
+    ${th('Клиентов', 'уник.', '', true)}
+    ${th('Отработано', '% от заявок', '', true)}
+    ${th('Успеш. контакт', '% от заявок', '', true)}
+    ${th('Отмен', 'клиентов', '', true)}
+    ${th('% отмен', 'от клиентов', '', true)}
+    ${th('Бронь+', 'клиентов', '', true)}
+    ${th('CR в бронь+', 'от клиентов', '', true)}
+    ${th('Сделка (ДДУ)', 'клиентов', '', true)}
+    ${th('CR в сделку', 'от клиентов', '', true)}
+  </tr></thead>
+  <tbody>
+    ${regions.map(r => `
+      <tr>
+        <td>${r.name}</td>
+        <td>${fmt.num(r.n_apps)}</td>
+        <td>${fmt.num(r.n_cli)}</td>
+        <td>${fmt.pct(r.obr_p)}</td>
+        <td>${fmt.pct(r.usp_p)}</td>
+        <td>${fmt.num(r.otm)}</td>
+        <td>${fmt.pct(r.otm_p)}</td>
+        <td>${fmt.num(r.br_plus)}</td>
+        <td>${fmt.pct(r.cr_br)}</td>
+        <td>${fmt.num(r.sdl)}</td>
+        <td>${fmt.pct(r.cr_deal)}</td>
+      </tr>
+    `).join('')}
+    <tr class="total">
+      <td>${totalReg.name}</td>
+      <td>${fmt.num(totalReg.n_apps)}</td>
+      <td>${fmt.num(totalReg.n_cli)}</td>
+      <td>${fmt.pct(totalReg.obr_p)}</td>
+      <td>${fmt.pct(totalReg.usp_p)}</td>
+      <td>${fmt.num(totalReg.otm)}</td>
+      <td>${fmt.pct(totalReg.otm_p)}</td>
+      <td>${fmt.num(totalReg.br_plus)}</td>
+      <td>${fmt.pct(totalReg.cr_br)}</td>
+      <td>${fmt.num(totalReg.sdl)}</td>
+      <td>${fmt.pct(totalReg.cr_deal)}</td>
+    </tr>
+  </tbody>
+`;
+
+// ==== Managers ====
+const mgrCols = [
+  { key: 'name', main: 'Менеджер', sub: '', fmt: v => v },
+  { key: 'n_apps', main: 'Заявок', sub: 'всего', fmt: fmt.num },
+  { key: 'n_cli', main: 'Клиентов', sub: 'уник.', fmt: fmt.num },
+  { key: 'usp_p', main: '% успеш.', sub: 'от заявок', fmt: v => fmt.pct(v), bar: 'good' },
+  { key: 'obz_br', main: 'Обещали бронь', sub: 'в обзвоне', fmt: fmt.num },
+  { key: 'br_plus', main: 'Бронь+', sub: 'факт, клиентов', fmt: fmt.num },
+  { key: 'cr_br', main: 'CR в бронь+', sub: 'от клиентов', fmt: v => fmt.pct(v), bar: 'good' },
+  { key: 'sdl', main: 'Сделка', sub: 'клиентов · ДДУ', fmt: fmt.num },
+  { key: 'cr_deal', main: 'CR в сделку', sub: 'от клиентов', fmt: v => fmt.pct(v), bar: 'good' },
+  { key: 'otm', main: 'Отмен', sub: 'клиентов', fmt: fmt.num },
+  { key: 'otm_p', main: '% отмен', sub: 'от клиентов', fmt: v => fmt.pct(v), bar: 'bad' },
+];
+let mgrSort = { key: 'cr_deal', asc: false };
+
+function renderMgrs() {
+  const sorted = [...DATA.mgrs].sort((a,b) => {
+    const av = a[mgrSort.key], bv = b[mgrSort.key];
+    if (mgrSort.key === 'name') return mgrSort.asc ? av.localeCompare(bv,'ru') : bv.localeCompare(av,'ru');
+    return mgrSort.asc ? av - bv : bv - av;
+  });
+  const max = {};
+  mgrCols.forEach(c => { if (c.bar) max[c.key] = Math.max(...sorted.map(r => r[c.key])); });
+
+  const totals = {
+    name: 'ИТОГО',
+    n_apps: sorted.reduce((s,r)=>s+r.n_apps,0),
+    n_cli: sorted.reduce((s,r)=>s+r.n_cli,0),
+    usp: sorted.reduce((s,r)=>s+r.usp,0),
+    obz_br: sorted.reduce((s,r)=>s+r.obz_br,0),
+    br_plus: sorted.reduce((s,r)=>s+r.br_plus,0),
+    sdl: sorted.reduce((s,r)=>s+r.sdl,0),
+    otm: sorted.reduce((s,r)=>s+r.otm,0),
+  };
+  totals.usp_p = totals.usp/totals.n_apps;
+  totals.cr_br = totals.br_plus/totals.n_cli;
+  totals.cr_deal = totals.sdl/totals.n_cli;
+  totals.otm_p = totals.otm/totals.n_cli;
+
+  const html = `
+    <thead><tr>
+      ${mgrCols.map(c => {
+        const sortInd = mgrSort.key===c.key ? `<span class="sort-ind">${mgrSort.asc?'▲':'▼'}</span>` : '<span class="sort-ind">·</span>';
+        return `<th data-key="${c.key}"><span class="th-main">${c.main}${sortInd}</span>${c.sub ? `<span class="th-sub">${c.sub}</span>` : ''}</th>`;
+      }).join('')}
+    </tr></thead>
+    <tbody>
+      ${sorted.map(r => `
+        <tr>
+          ${mgrCols.map(c => {
+            const v = r[c.key];
+            if (c.bar) {
+              const w = max[c.key] > 0 ? (v/max[c.key])*100 : 0;
+              return `<td><div class="cell-bar"><div class="cell-bar-fg ${c.bar}" style="width:${w}%"></div><span class="cell-bar-val">${c.fmt(v)}</span></div></td>`;
+            }
+            return `<td>${c.fmt(v)}</td>`;
+          }).join('')}
+        </tr>
+      `).join('')}
+      <tr class="total">
+        ${mgrCols.map(c => `<td>${c.fmt(totals[c.key] ?? '')}</td>`).join('')}
+      </tr>
+    </tbody>
+  `;
+  document.getElementById('t-mgrs').innerHTML = html;
+
+  document.querySelectorAll('#t-mgrs th').forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.key;
+      if (!k) return;
+      if (mgrSort.key === k) mgrSort.asc = !mgrSort.asc;
+      else { mgrSort.key = k; mgrSort.asc = k === 'name'; }
+      renderMgrs();
+    });
+  });
+}
+renderMgrs();
+
+// Mgr x Region
+document.getElementById('t-mgr-reg').innerHTML = `
+  <thead><tr>
+    ${th('Менеджер', '', '', true)}
+    ${th('Екатеринбург', 'клиентов', '', true)}
+    ${th('Екб бронь+', 'клиентов', '', true)}
+    ${th('Екб CR бронь+', '', '', true)}
+    ${th('Екб сделка', 'клиентов', '', true)}
+    ${th('Екб CR сделка', '', '', true)}
+    ${th('Казань', 'клиентов', '', true)}
+    ${th('Каз бронь+', 'клиентов', '', true)}
+    ${th('Каз CR бронь+', '', '', true)}
+    ${th('Каз сделка', 'клиентов', '', true)}
+    ${th('Каз CR сделка', '', '', true)}
+  </tr></thead>
+  <tbody>
+    ${DATA.mgr_reg.map(r => `
+      <tr>
+        <td>${r.name}</td>
+        <td>${fmt.num(r.ekb_n)}</td>
+        <td>${fmt.num(r.ekb_br)}</td>
+        <td>${r.ekb_n > 0 ? fmt.pct(r.ekb_cr_br) : '—'}</td>
+        <td>${fmt.num(r.ekb_sdl)}</td>
+        <td>${r.ekb_n > 0 ? fmt.pct(r.ekb_cr_deal) : '—'}</td>
+        <td>${fmt.num(r.kzn_n)}</td>
+        <td>${fmt.num(r.kzn_br)}</td>
+        <td>${r.kzn_n > 0 ? fmt.pct(r.kzn_cr_br) : '—'}</td>
+        <td>${fmt.num(r.kzn_sdl)}</td>
+        <td>${r.kzn_n > 0 ? fmt.pct(r.kzn_cr_deal) : '—'}</td>
+      </tr>
+    `).join('')}
+  </tbody>
+`;
+
+// ==== Structure ====
+const maxStruct = Math.max(...DATA.structure.map(s => s[1]));
+document.getElementById('struct-block').innerHTML = DATA.structure.map(s => {
+  const [name, cnt, type] = s;
+  const w = maxStruct > 0 ? (cnt/maxStruct)*100 : 0;
+  const p = DATA.obr > 0 ? cnt/DATA.obr : 0;
+  const barClass = type === 'neutral' ? 'neutral' : type;
+  return `
+    <div class="struct-row">
+      <div class="name ${type}">${name}</div>
+      <div class="cnt">${fmt.num(cnt)}</div>
+      <div class="pct">${fmt.pct(p)}</div>
+      <div class="struct-bar"><div class="struct-bar-fg ${barClass}" style="width:${w}%"></div></div>
+    </div>
+  `;
+}).join('');
+
+// ==== Insights ====
+const ekb = DATA.regions.find(r => r.name === 'Екатеринбург');
+const kzn = DATA.regions.find(r => r.name === 'Казань');
+const clientOtm = DATA.otm_types.find(t => t.type==='Клиент')?.count || 0;
+const avitoOtm = DATA.otm_types.find(t => t.type==='Авито')?.count || 0;
+const agentOtm = DATA.otm_types.find(t => t.type==='Агент')?.count || 0;
+const manageable = avitoOtm + agentOtm;
+
+const insights = [
+  `Из <b>${DATA.total_apps}</b> заявок (<b>${DATA.total_clients}</b> уник. клиентов) до сделки дошли <span class="crit">${DATA.actual_deal}</span> (CR в сделку = <b>${fmt.pct(DATA.cr_deal)}</b>). До брони и дальше — <b>${DATA.actual_br_plus}</b> клиентов (CR в&nbsp;бронь+ = <b>${fmt.pct(DATA.cr_br_plus)}</b>).`,
+  `Главный разрыв: в обзвоне менеджеры пометили <b>${DATA.fate.obz_br_count}</b> заявок как «Вышли на бронь», но <span class="crit">${DATA.fate.fate_stuck_fix}</span> из них до сих пор в&nbsp;статусе «Фиксация*» — заявка на бронь так и&nbsp;не была подана. До сделки дошли <span class="good">${DATA.fate.fate_deal}</span>.`,
+  `Регионы: Екатеринбург — <b>${ekb.sdl}</b> сделок (CR ${fmt.pct(ekb.cr_deal)}), Казань — <b>${kzn.sdl}</b> сделок (CR ${fmt.pct(kzn.cr_deal)}). По отменам: <span class="crit">${ekb.otm}</span> в Екб против <b>${kzn.otm}</b> в Казани.`,
+  `Отмен — <b>${DATA.actual_otm}</b> уник. клиентов (${fmt.pct(DATA.actual_otm_p)} от всей выборки). Из них клиентских — <b>${clientOtm}</b> (${fmt.pct(clientOtm/DATA.actual_otm, 0)}). Управляемых нами (Авито + Агент) — <span class="crit">${manageable}</span> (${fmt.pct(manageable/DATA.actual_otm, 0)}).`,
+  `Самые частые причины отмен: «${DATA.otm_reasons[0].reason}» (${DATA.otm_reasons[0].count}) и «${DATA.otm_reasons[1].reason}» (${DATA.otm_reasons[1].count}). Тревожно: «Авито: закрытие в&nbsp;пользу успешной заявки» — это значит дубли, по которым мы зря тратили ресурс обзвона.`,
+  `Доля «Не прошёл срок» (${fmt.pct(DATA.nps/DATA.total_apps, 0)}) и «Уточняем в чате» (${fmt.pct(DATA.chat/DATA.total_apps, 0)}) суммарно ~30% — база рано пошла в обзвон или застряла без next step.`,
+  `<b>Главная гипотеза для следующего пилота:</b> заставлять менеджера фиксировать в обзвоне не «Вышли на бронь», а «Заявка на бронь оставлена в CRM». Так мы закроем разрыв между обещанием и фактом, который сейчас составляет <span class="crit">${DATA.fate.fate_stuck_fix}</span> из <b>${DATA.fate.obz_br_count}</b>.`,
+];
+document.getElementById('insights-block').innerHTML = insights.map((t, i) => `
+  <div class="insight">
+    <div class="insight-marker">${String(i+1).padStart(2,'0')}.</div>
+    <div class="insight-text">${t}</div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>
