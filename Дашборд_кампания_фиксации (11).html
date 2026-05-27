@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пилот CR в сделку — Екатеринбург и Казань</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f2ec;
+  --paper:#ffffff;
+  --ink:#1c1b18;
+  --ink-soft:#55524b;
+  --ink-faint:#94908a;
+  --line:#e2ded4;
+  --line-soft:#ede9e0;
+  --accent:#1f7a44;
+  --accent-soft:#e5f1e8;
+  --accent-deep:#155c32;
+  --crit:#c0392b;
+  --crit-soft:#f7e4e1;
+  --warn:#b8860b;
+  --shadow:0 1px 2px rgba(28,27,24,.04),0 8px 24px rgba(28,27,24,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(var(--line) .5px,transparent .5px);
+  background-size:22px 22px;
+}
+.container{max-width:1180px;margin:0 auto;padding:32px 28px 80px;}
+
+/* header */
+header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:32px;flex-wrap:wrap;
+  border-bottom:3px solid var(--ink);
+  padding-bottom:22px;margin-bottom:8px;
+}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:10px;
+}
+h1{
+  font-family:'Big Shoulders Display',sans-serif;
+  font-weight:900;font-size:54px;line-height:.96;
+  letter-spacing:.005em;text-transform:uppercase;
+}
+h1 .ln2{display:block;color:var(--accent);}
+.meta{
+  display:grid;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  min-width:230px;
+}
+.meta .row{display:flex;justify-content:space-between;gap:16px;
+  border-bottom:1px dotted var(--line);padding-bottom:3px;}
+.meta .label{color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;}
+.meta .val{color:var(--ink);font-weight:500;}
+
+/* nav */
+nav.toc{
+  display:flex;gap:4px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:20;
+  background:var(--bg);
+  padding:12px 0 12px;margin-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+nav.toc a{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--ink-soft);text-decoration:none;
+  padding:5px 11px;border:1px solid var(--line);border-radius:999px;
+  background:var(--paper);transition:all .18s;
+}
+nav.toc a:hover{color:var(--paper);background:var(--accent);border-color:var(--accent);}
+
+/* sections */
+section{margin-top:48px;scroll-margin-top:60px;}
+.section-head{
+  display:flex;align-items:baseline;gap:14px;margin-bottom:18px;
+}
+.section-head h2{
+  font-family:'Big Shoulders Display',sans-serif;
+  font-weight:800;font-size:30px;text-transform:uppercase;letter-spacing:.01em;
+}
+.section-head .sub{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  color:var(--ink-faint);letter-spacing:.06em;
+  flex:1;border-bottom:1px dashed var(--line);padding-bottom:4px;
+}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-secondary{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px;}
+.kpi{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:18px 18px 16px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;
+}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);}
+.kpi.good::before{background:var(--accent);}
+.kpi.crit::before{background:var(--crit);}
+.kpi.warn::before{background:var(--warn);}
+.kpi .k-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--ink-faint);
+}
+.kpi .k-value{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;
+  font-size:42px;line-height:1;letter-spacing:.01em;
+}
+.kpi.good .k-value{color:var(--accent-deep);}
+.kpi.crit .k-value{color:var(--crit);}
+.kpi .k-sub{font-size:12px;color:var(--ink-soft);}
+.kpi .k-cr{
+  margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  background:var(--accent-soft);color:var(--accent-deep);font-weight:700;
+  padding:3px 8px;border-radius:5px;align-self:flex-start;
+}
+
+/* generic card */
+.col-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:20px;box-shadow:var(--shadow);
+}
+.col-card h3{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:700;
+  font-size:19px;text-transform:uppercase;letter-spacing:.02em;
+  margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.06em;
+  background:var(--line-soft);color:var(--ink-soft);
+  padding:3px 7px;border-radius:4px;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* funnel */
+.funnel{display:grid;gap:10px;}
+.f-row{
+  background:var(--paper);border:1px solid var(--line);border-radius:9px;
+  padding:14px 18px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:18px;
+}
+.f-stage{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);
+  width:160px;flex-shrink:0;
+}
+.f-bar-wrap{flex:1;height:30px;background:var(--line-soft);border-radius:6px;overflow:hidden;}
+.f-bar{
+  height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent));
+  display:flex;align-items:center;padding-left:12px;border-radius:6px;
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:18px;color:#fff;
+  min-width:54px;transition:width 1s cubic-bezier(.2,.7,.3,1);
+}
+.f-conv{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--accent-deep);width:74px;text-align:right;flex-shrink:0;
+}
+
+/* tables */
+.table-wrap{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  overflow:auto;box-shadow:var(--shadow);
+}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  background:var(--line-soft);
+  text-align:left;padding:10px 13px;vertical-align:bottom;
+  border-bottom:2px solid var(--line);
+  position:relative;cursor:default;white-space:nowrap;
+}
+thead th .th-main{
+  font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:12px;
+  display:block;color:var(--ink);
+}
+thead th .th-sub{
+  font-family:'JetBrains Mono',monospace;font-weight:400;font-size:9px;
+  color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;display:block;
+}
+th.sortable{cursor:pointer;user-select:none;}
+th.sortable:hover{background:var(--accent-soft);}
+th .arrow{color:var(--accent);font-size:9px;margin-left:3px;}
+tbody td{padding:9px 13px;border-bottom:1px solid var(--line-soft);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--accent-soft);}
+tbody tr.total-row{background:var(--line-soft);font-weight:700;}
+tbody tr.total-row td{border-top:2px solid var(--line);}
+.cell-name{font-weight:600;}
+.databar{position:relative;}
+.databar .bar{
+  position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);
+  border-radius:3px;z-index:0;
+}
+.databar .v{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.pct-good{color:var(--accent-deep);font-weight:700;}
+.pct-bad{color:var(--crit);font-weight:700;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* план / факт */
+.pf-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.pf-tabs{display:flex;gap:6px;}
+.pf-toggle{
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
+}
+.pf-toggle .tg-switch{
+  position:relative;width:42px;height:22px;border-radius:999px;
+  background:var(--line);cursor:pointer;transition:background .2s;flex-shrink:0;
+}
+.pf-toggle .tg-switch.on{background:var(--accent);}
+.pf-toggle .tg-knob{
+  position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s;
+}
+.pf-toggle .tg-switch.on .tg-knob{left:22px;}
+.pf-toggle .tg-label.active{color:var(--accent-deep);font-weight:700;}
+.pf-proj-badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  background:var(--accent-soft);color:var(--accent-deep);font-weight:700;
+  padding:2px 6px;border-radius:4px;margin-left:5px;
+}
+.pf-tab{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding:7px 16px;border:1px solid var(--line);border-radius:999px;
+  background:var(--paper);color:var(--ink-soft);cursor:pointer;transition:all .16s;
+}
+.pf-tab:hover{border-color:var(--accent);color:var(--accent-deep);}
+.pf-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.pf-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;}
+.pf-bar-cell{position:relative;min-width:84px;}
+.pf-bar-cell .pf-track{
+  position:absolute;left:0;right:0;bottom:2px;height:4px;
+  background:var(--line-soft);border-radius:2px;
+}
+.pf-bar-cell .pf-fill{position:absolute;left:0;bottom:2px;height:4px;border-radius:2px;}
+.pf-fill.hi{background:var(--accent);}
+.pf-fill.mid{background:var(--warn);}
+.pf-fill.lo{background:var(--crit);}
+
+/* эффект инициативы */
+.effect-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.eff-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.eff-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;}
+.eff-card.worked::before{background:var(--accent);}
+.eff-card.cold::before{background:var(--ink-faint);}
+.eff-card .eff-head{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:3px;
+}
+.eff-card .eff-title{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;
+  font-size:21px;text-transform:uppercase;margin-bottom:14px;
+}
+.eff-metrics{display:flex;gap:24px;}
+.eff-m{display:flex;flex-direction:column;gap:2px;}
+.eff-m .em-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);}
+.eff-m .em-val{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:34px;line-height:1;
+}
+.eff-card.worked .em-val{color:var(--accent-deep);}
+.eff-card.cold .em-val{color:var(--ink-soft);}
+.eff-m .em-sub{font-size:11px;color:var(--ink-soft);}
+.eff-uplift{
+  margin-top:13px;padding-top:11px;border-top:1px dashed var(--line);
+  font-size:12px;color:var(--ink-soft);
+}
+.eff-uplift b{font-family:'JetBrains Mono',monospace;color:var(--accent-deep);font-size:13px;}
+.effect-note{
+  margin-top:14px;font-size:12.5px;color:var(--ink-soft);line-height:1.55;
+  border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 6px 6px 0;
+}
+.uplift-cell{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.uplift-pos{color:var(--accent-deep);}
+@media(max-width:900px){.effect-cards{grid-template-columns:1fr;}}
+
+/* обзвон vs факт */
+.ovf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.ovf-cell{
+  border:1px solid var(--line);border-radius:8px;padding:13px 14px;
+  background:var(--bg);display:flex;flex-direction:column;gap:4px;
+}
+.ovf-cell .ovf-label{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);
+}
+.ovf-cell .ovf-val{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:32px;line-height:1;
+}
+.ovf-cell .ovf-note{font-size:11px;color:var(--ink-soft);}
+.ovf-cell.accent{border-left:3px solid var(--accent);}
+.ovf-cell.accent .ovf-val{color:var(--accent-deep);}
+.ovf-cell.crit{border-left:3px solid var(--crit);}
+.ovf-cell.crit .ovf-val{color:var(--crit);}
+.ovf-cell.warn{border-left:3px solid var(--warn);}
+.ovf-cell.warn .ovf-val{color:var(--warn);}
+@media(max-width:900px){.ovf{grid-template-columns:repeat(2,1fr);}}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div>
+    <div class="eyebrow">Внутренний отчёт · Поддержка · Кампания обзвона</div>
+    <h1>Пилот CR&nbsp;в&nbsp;сделку:<span class="ln2">Екатеринбург и&nbsp;Казань</span></h1>
+  </div>
+  <div class="meta">
+    <div class="row"><span class="label">Период</span><span class="val">20.04 – 04.05.2026</span></div>
+    <div class="row"><span class="label">Заявок / клиентов</span><span class="val" id="m-total">—</span></div>
+    <div class="row"><span class="label">Менеджеров</span><span class="val">6</span></div>
+    <div class="row"><span class="label">Обновлено</span><span class="val" id="m-date">—</span></div>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#planfact">План/факт</a>
+  <a href="#kpi">KPI</a>
+  <a href="#effect">Эффект</a>
+  <a href="#funnel">Воронка</a>
+  <a href="#regions">Регионы</a>
+</nav>
+
+<section id="planfact">
+  <div class="section-head">
+    <h2>План / факт по&nbsp;воронке</h2>
+    <div class="sub">→ Все регионы · апрель и&nbsp;май 2026 · факт сделок на&nbsp;27.05</div>
+  </div>
+  <div class="pf-controls">
+    <div class="pf-tabs" id="pf-tabs"></div>
+    <div class="pf-toggle">
+      <span class="tg-label" id="tg-label-fact">Факт</span>
+      <span class="tg-switch" id="pf-switch"><span class="tg-knob"></span></span>
+      <span class="tg-label" id="tg-label-proj">Прогноз</span>
+    </div>
+  </div>
+  <div class="col-card" style="margin-top:14px;padding:18px 20px;">
+    <h3>Воронка <span class="badge">Новые ФБ → Уникальные активные ФБ</span></h3>
+    <div class="table-wrap" style="border:none;box-shadow:none;"><table id="t-pf-funnel"></table></div>
+  </div>
+  <div class="col-card" style="margin-top:14px;padding:18px 20px;">
+    <h3>Результат <span class="badge">Сделки → CR в сделку</span></h3>
+    <div class="table-wrap" style="border:none;box-shadow:none;"><table id="t-pf-result"></table></div>
+  </div>
+  <div class="col-card" id="pf-decomp-card" style="margin-top:14px;padding:18px 20px;display:none;">
+    <h3>Декомпозиция прогноза <span class="badge">Откуда возьмутся сделки до&nbsp;31.05</span></h3>
+    <div class="table-wrap" style="border:none;box-shadow:none;"><table id="t-pf-decomp"></table></div>
+    <p class="effect-note" style="margin-top:10px;">
+      <b>CR хвоста</b> — историческая доля бронирований, которые из&nbsp;статуса «активна на&nbsp;26-е число» успевали получить ДДУ до&nbsp;конца месяца. Усреднено по&nbsp;марту и&nbsp;апрелю. Чем выше CR хвоста — тем «быстрее» регион конвертирует висящие брони в&nbsp;сделки в&nbsp;последние дни.
+    </p>
+  </div>
+  <p class="effect-note" id="pf-note"></p>
+</section>
+
+<section id="kpi">
+  <div class="section-head">
+    <h2>Ключевые показатели</h2>
+    <div class="sub">→ Отработка/контакт — из реестра · Брони/сделки — по клиентам, CRM на 27.05</div>
+  </div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <div class="kpi-secondary" id="kpi-secondary"></div>
+
+  <div style="margin-top:16px;">
+    <div class="col-card">
+      <h3>Обзвон vs факт <span class="badge">что обещали — что вышло</span></h3>
+      <div class="ovf" id="ovf-block"></div>
+    </div>
+  </div>
+</section>
+
+<section id="effect">
+  <div class="section-head">
+    <h2>Эффект инициативы</h2>
+    <div class="sub">→ CR в бронь и сделку: отработанные заявки vs неотработанные</div>
+  </div>
+  <div class="effect-cards" id="effect-cards"></div>
+  <div class="table-wrap" style="margin-top:16px;"><table id="t-effect"></table></div>
+  <p class="effect-note" id="effect-note"></p>
+</section>
+
+<section id="funnel">
+  <div class="section-head">
+    <h2>Воронка кампании</h2>
+    <div class="sub">→ От заявки до сделки</div>
+  </div>
+  <div class="funnel" id="funnel-block"></div>
+</section>
+
+<section id="regions">
+  <div class="section-head">
+    <h2>В&nbsp;разрезе регионов</h2>
+    <div class="sub">→ Екатеринбург vs Казань</div>
+  </div>
+  <div class="table-wrap"><table id="t-regions"></table></div>
+</section>
+
+<footer>Внутренний отчёт · Поддержка · Пилот «CR в сделку»</footer>
+
+</div>
+
+<script>
+const DATA = {"total": 1060, "clients": 1035, "ekb": 588, "kzn": 472, "obr": 849, "obr_p": 0.8009433962264151, "usp": 302, "usp_p": 0.35571260306242636, "otm": 200, "otm_p": 0.1932367149758454, "br": 109, "br_p": 0.10531400966183575, "sdl": 67, "sdl_p": 0.0647342995169082, "nps": 116, "chat": 193, "ov_said": 61, "ov_fact": 48, "ov_fix": 8, "ov_otm": 5, "parallel": 49, "regions": [{"name": "Екатеринбург", "total": 588, "clients": 578, "obr": 435, "obr_p": 0.7397959183673469, "usp": 168, "usp_p": 0.38620689655172413, "otm": 141, "otm_p": 0.24394463667820068, "br": 75, "br_p": 0.12975778546712802, "sdl": 48, "sdl_p": 0.08304498269896193}, {"name": "Казань", "total": 472, "clients": 457, "obr": 414, "obr_p": 0.8771186440677966, "usp": 134, "usp_p": 0.32367149758454106, "otm": 59, "otm_p": 0.12910284463894967, "br": 34, "br_p": 0.07439824945295405, "sdl": 19, "sdl_p": 0.04157549234135667}], "mgrs": [{"name": "Рабец Ирина", "total": 147, "clients": 142, "obr": 57, "obr_p": 0.3877551020408163, "usp": 31, "usp_p": 0.543859649122807, "otm": 1, "otm_p": 0.007042253521126761, "br": 18, "br_p": 0.1267605633802817, "dlg": 31, "ndz": 17}, {"name": "Марченко Юлия", "total": 110, "clients": 108, "obr": 66, "obr_p": 0.6, "usp": 18, "usp_p": 0.2727272727272727, "otm": 1, "otm_p": 0.009259259259259259, "br": 12, "br_p": 0.1111111111111111, "dlg": 18, "ndz": 40}, {"name": "Балашов Артём", "total": 340, "clients": 326, "obr": 140, "obr_p": 0.4117647058823529, "usp": 51, "usp_p": 0.36428571428571427, "otm": 1, "otm_p": 0.003067484662576687, "br": 26, "br_p": 0.07975460122699386, "dlg": 51, "ndz": 77}, {"name": "Свиридова Анастасия", "total": 148, "clients": 142, "obr": 70, "obr_p": 0.47297297297297297, "usp": 26, "usp_p": 0.37142857142857144, "otm": 0, "otm_p": 0.0, "br": 7, "br_p": 0.04929577464788732, "dlg": 26, "ndz": 2}, {"name": "Александра Ли", "total": 187, "clients": 183, "obr": 135, "obr_p": 0.7219251336898396, "usp": 45, "usp_p": 0.3333333333333333, "otm": 2, "otm_p": 0.01092896174863388, "br": 8, "br_p": 0.04371584699453552, "dlg": 45, "ndz": 30}, {"name": "Праник Влада", "total": 37, "clients": 37, "obr": 27, "obr_p": 0.7297297297297297, "usp": 3, "usp_p": 0.1111111111111111, "otm": 0, "otm_p": 0.0, "br": 0, "br_p": 0.0, "dlg": 3, "ndz": 3}], "mgr_reg": [{"name": "Александра Ли", "Екатеринбург": {"n": 0, "br": 0}, "Казань": {"n": 187, "br": 8}}, {"name": "Балашов Артём", "Екатеринбург": {"n": 309, "br": 22}, "Казань": {"n": 31, "br": 4}}, {"name": "Марченко Юлия", "Екатеринбург": {"n": 97, "br": 11}, "Казань": {"n": 13, "br": 1}}, {"name": "Праник Влада", "Екатеринбург": {"n": 0, "br": 0}, "Казань": {"n": 37, "br": 0}}, {"name": "Рабец Ирина", "Екатеринбург": {"n": 128, "br": 17}, "Казань": {"n": 19, "br": 1}}, {"name": "Свиридова Анастасия", "Екатеринбург": {"n": 0, "br": 0}, "Казань": {"n": 148, "br": 7}}], "effect": {"Все регионы": {"Отработанные": {"clients": 833, "br": 95, "sdl": 62, "br_p": 0.11404561824729892, "sdl_p": 0.0744297719087635}, "Неотработанные": {"clients": 202, "br": 14, "sdl": 5, "br_p": 0.06930693069306931, "sdl_p": 0.024752475247524754}, "Все": {"clients": 1035, "br": 109, "sdl": 67, "br_p": 0.10531400966183575, "sdl_p": 0.0647342995169082}}, "Екатеринбург": {"Отработанные": {"clients": 432, "br": 65, "sdl": 44, "br_p": 0.15046296296296297, "sdl_p": 0.10185185185185185}, "Неотработанные": {"clients": 146, "br": 10, "sdl": 4, "br_p": 0.0684931506849315, "sdl_p": 0.0273972602739726}, "Все": {"clients": 578, "br": 75, "sdl": 48, "br_p": 0.12975778546712802, "sdl_p": 0.08304498269896193}}, "Казань": {"Отработанные": {"clients": 401, "br": 30, "sdl": 18, "br_p": 0.07481296758104738, "sdl_p": 0.04488778054862843}, "Неотработанные": {"clients": 56, "br": 4, "sdl": 1, "br_p": 0.07142857142857142, "sdl_p": 0.017857142857142856}, "Все": {"clients": 457, "br": 34, "sdl": 19, "br_p": 0.07439824945295405, "sdl_p": 0.04157549234135667}}}, "otm_types": [{"name": "Клиент", "count": 79}, {"name": "Не указано", "count": 73}, {"name": "Агент", "count": 44}, {"name": "Авито", "count": 31}], "otm_reasons": [{"name": "Не указано", "count": 73}, {"name": "Агент: дубль заявки", "count": 37}, {"name": "Клиент: передумал покупать/отказывается комментировать", "count": 27}, {"name": "Клиент: отменил/отложил покупку из-за личных обстоятельств", "count": 22}, {"name": "Клиент: выбор в пользу вторички", "count": 14}, {"name": "Авито: закрытие в пользу успешной заявки", "count": 10}, {"name": "Авито: клиент не уникальный", "count": 9}, {"name": "Клиент: отказался от работы с агентом/заключил сделку без агента", "count": 8}, {"name": "Агент: не выходит на связь", "count": 7}, {"name": "Авито: ушел к др. агрегатору/напрямую к застройщику", "count": 7}, {"name": "Авито: нет нужного застройщика/ЖК", "count": 5}, {"name": "Клиент: перестал выходить на связь", "count": 3}, {"name": "Клиент: нет средств", "count": 3}, {"name": "Клиент: ждет продажи своей квартиры", "count": 1}, {"name": "Клиент: отказ в ипотеке", "count": 1}], "otm_reg": [{"name": "Екатеринбург", "total": 141, "Клиент": 62, "Агент": 21, "Авито": 16, "Не указано": 42, "Другое": 0}, {"name": "Казань", "total": 86, "Клиент": 17, "Агент": 23, "Авито": 15, "Не указано": 31, "Другое": 0}], "struct": [{"name": "Уточняем статус в чате", "count": 143}, {"name": "Не прошёл срок", "count": 116}, {"name": "Отличная комиссия", "count": 73}, {"name": "Агент проинформирован в чате до реестра", "count": 50}, {"name": "Акции\\Отличная комиссия/Топ оффер", "count": 46}, {"name": "Отмена заявки", "count": 45}, {"name": "Вышли на бронь", "count": 37}, {"name": "Исключить из обзвона", "count": 27}, {"name": "Акции", "count": 13}, {"name": "Агентство", "count": 10}, {"name": "Ждём заявку на бронь", "count": 8}, {"name": "Сделка прошла", "count": 6}, {"name": "Требуется подбор Акций", "count": 2}, {"name": "Негатив со стороны агента", "count": 1}], "planfact": {"Казань": {"apr": {"sp": 66, "sf": 108, "sf_proj": 108, "crp": 0.05, "crf": 0.0792, "nfp": 373, "nff": 425, "nff_proj": 425, "uap": 1320, "uaf": 1364}, "may": {"sp": 115, "sf": 44, "sf_proj": 56, "crp": 0.0832, "crf": 0.0388, "nfp": 507, "nff": 248, "nff_proj": 296, "uap": 1382, "uaf": 1134}}, "Уфа": {"apr": {"sp": 113, "sf": 153, "sf_proj": 153, "crp": 0.1196, "crf": 0.1581, "nfp": 435, "nff": 467, "nff_proj": 467, "uap": 945, "uaf": 968}, "may": {"sp": 89, "sf": 78, "sf_proj": 85, "crp": 0.1051, "crf": 0.0825, "nfp": 228, "nff": 244, "nff_proj": 291, "uap": 847, "uaf": 946}}, "Ростов": {"apr": {"sp": 120, "sf": 128, "sf_proj": 128, "crp": 0.1622, "crf": 0.1639, "nfp": 210, "nff": 245, "nff_proj": 245, "uap": 740, "uaf": 781}, "may": {"sp": 152, "sf": 78, "sf_proj": 113, "crp": 0.1772, "crf": 0.1103, "nfp": 381, "nff": 192, "nff_proj": 229, "uap": 858, "uaf": 707}}, "Воронеж": {"apr": {"sp": 55, "sf": 66, "sf_proj": 66, "crp": 0.1325, "crf": 0.1535, "nfp": 146, "nff": 165, "nff_proj": 165, "uap": 415, "uaf": 430}, "may": {"sp": 52, "sf": 44, "sf_proj": 62, "crp": 0.119, "crf": 0.1152, "nfp": 178, "nff": 76, "nff_proj": 91, "uap": 437, "uaf": 382}}, "Екатеринбург": {"apr": {"sp": 86, "sf": 97, "sf_proj": 97, "crp": 0.0823, "crf": 0.0893, "nfp": 445, "nff": 492, "nff_proj": 492, "uap": 1045, "uaf": 1086}, "may": {"sp": 92, "sf": 42, "sf_proj": 56, "crp": 0.09, "crf": 0.0353, "nfp": 330, "nff": 372, "nff_proj": 444, "uap": 1022, "uaf": 1189}}, "Total": {"apr": {"sp": 440, "sf": 552, "sf_proj": 552, "crp": 0.0985, "crf": 0.1192, "nfp": 1609, "nff": 1794, "nff_proj": 1794, "uap": 4465, "uaf": 4629}, "may": {"sp": 500, "sf": 286, "sf_proj": 372, "crp": 0.11, "crf": 0.0656, "nfp": 1624, "nff": 1132, "nff_proj": 1350, "uap": 4546, "uaf": 4358}}}, "proj_k": 1.1923, "proj_days": "27 из 31", "forecast_meta": {"method": "cohort_ripening_mar_apr_avg", "tail_cr": {"Казань": 0.2755960729312763, "Екатеринбург": 0.1419245647969052, "Уфа": 0.11363636363636363, "Ростов": 0.3742559523809524, "Воронеж": 0.150352733686067}, "components": {"Казань": {"fact": 44, "add_active": 12.1, "add_new": 0, "forecast": 56, "plan": 115, "active_now": 44, "new_expected": 12.5, "cr": 0.2755960729312763}, "Уфа": {"fact": 78, "add_active": 7.3, "add_new": 0, "forecast": 85, "plan": 89, "active_now": 64, "new_expected": 22.3, "cr": 0.11363636363636363}, "Ростов": {"fact": 78, "add_active": 35.2, "add_new": 0, "forecast": 113, "plan": 152, "active_now": 94, "new_expected": 30.2, "cr": 0.3742559523809524}, "Воронеж": {"fact": 44, "add_active": 17.7, "add_new": 0, "forecast": 62, "plan": 52, "active_now": 118, "new_expected": 13.7, "cr": 0.150352733686067}, "Екатеринбург": {"fact": 42, "add_active": 13.6, "add_new": 0, "forecast": 56, "plan": 92, "active_now": 96, "new_expected": 22.1, "cr": 0.1419245647969052}, "Total": {"fact": 286, "add_active": 85.9, "add_new": 0, "forecast": 372, "plan": 500, "active_now": 416, "new_expected": 100.8, "cr": 0.20659950673310518}}, "days_left": 6, "data_date": "27.05", "crm_date": "25.05"}};
+
+const fmt = {
+  num:(n)=>n.toLocaleString('ru-RU'),
+  pct:(n,d=1)=>(n*100).toFixed(d).replace('.',',')+'%',
+  pct2:(n)=>(n*100).toFixed(2).replace('.',',')+'%',
+};
+
+document.getElementById('m-total').textContent = fmt.num(DATA.total)+' / '+fmt.num(DATA.clients);
+document.getElementById('m-date').textContent = new Date().toLocaleDateString('ru-RU');
+
+/* KPI */
+const kpiMain = [
+  {label:'Заявок · клиентов',value:fmt.num(DATA.total),sub:fmt.num(DATA.clients)+' уник. клиентов',cls:''},
+  {label:'% отработанных',value:fmt.pct(DATA.obr_p,0),sub:fmt.num(DATA.obr)+' заявок',cls:DATA.obr_p>0.7?'good':'warn'},
+  {label:'Дозвонились (контакт)',value:fmt.pct(DATA.usp_p,0),sub:fmt.num(DATA.usp)+' из отработанных',cls:DATA.usp_p>0.5?'good':'warn'},
+  {label:'% отмен (CRM)',value:fmt.pct(DATA.otm_p,1),sub:fmt.num(DATA.otm)+' клиентов',cls:DATA.otm_p<0.15?'good':'crit'},
+];
+document.getElementById('kpi-grid').innerHTML = kpiMain.map(k=>`
+  <div class="kpi ${k.cls}">
+    <div class="k-label">${k.label}</div>
+    <div class="k-value">${k.value}</div>
+    <div class="k-sub">${k.sub}</div>
+  </div>`).join('');
+
+const kpiSec = [
+  {label:'Бронь (клиентов)',value:fmt.num(DATA.br),cr:'CR в бронь: '+fmt.pct2(DATA.br_p),cls:'good'},
+  {label:'Сделки (клиентов)',value:fmt.num(DATA.sdl),cr:'CR в сделку: '+fmt.pct2(DATA.sdl_p),cls:'good'},
+];
+document.getElementById('kpi-secondary').innerHTML = kpiSec.map(k=>`
+  <div class="kpi ${k.cls}">
+    <div class="k-label">${k.label}</div>
+    <div class="k-value">${k.value}</div>
+    ${k.cr?`<div class="k-cr">${k.cr}</div>`:`<div class="k-sub">${k.sub}</div>`}
+  </div>`).join('');
+
+/* обзвон vs факт */
+(()=>{
+  const cells=[
+    {label:'Сказали «вышли на бронь»',val:DATA.ov_said,note:'отметка менеджера в обзвоне',cls:'warn'},
+    {label:'Из них реально дошли',val:DATA.ov_fact,note:'бронь или сделка по CRM',cls:'accent'},
+    {label:'Висят в фиксации / отмене',val:DATA.ov_fix+DATA.ov_otm,note:'заявка на бронь не подана',cls:'crit'},
+    {label:'Закрылись «мимо обзвона»',val:DATA.parallel,note:'бронь через параллельную заявку клиента',cls:'accent'},
+  ];
+  document.getElementById('ovf-block').innerHTML=cells.map(c=>`
+    <div class="ovf-cell ${c.cls}">
+      <div class="ovf-label">${c.label}</div>
+      <div class="ovf-val">${fmt.num(c.val)}</div>
+      <div class="ovf-note">${c.note}</div>
+    </div>`).join('');
+})();
+
+/* Эффект инициативы */
+(()=>{
+  const ef=DATA.effect['Все регионы'];
+  const W=ef['Отработанные'], C=ef['Неотработанные'];
+  // карточки
+  const cards=[
+    {cls:'worked',head:'Заявка взята в работу',title:'Отработанные',d:W},
+    {cls:'cold',head:'Заявка не отрабатывалась',title:'Неотработанные',d:C},
+  ];
+  document.getElementById('effect-cards').innerHTML=cards.map(c=>`
+    <div class="eff-card ${c.cls}">
+      <div class="eff-head">${c.head}</div>
+      <div class="eff-title">${c.title} · ${fmt.num(c.d.clients)} клиентов</div>
+      <div class="eff-metrics">
+        <div class="eff-m">
+          <div class="em-label">CR в бронь</div>
+          <div class="em-val">${fmt.pct(c.d.br_p,1)}</div>
+          <div class="em-sub">${c.d.br} клиентов</div>
+        </div>
+        <div class="eff-m">
+          <div class="em-label">CR в сделку</div>
+          <div class="em-val">${fmt.pct(c.d.sdl_p,1)}</div>
+          <div class="em-sub">${c.d.sdl} клиентов</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // таблица по регионам
+  const order=['Все регионы','Екатеринбург','Казань'];
+  let h='<thead><tr>'+
+    '<th rowspan="2" style="vertical-align:bottom;"><span class="th-main">Регион</span></th>'+
+    '<th colspan="3" style="text-align:center;border-left:2px solid var(--line);"><span class="th-main">CR в бронь</span></th>'+
+    '<th colspan="3" style="text-align:center;border-left:2px solid var(--line);"><span class="th-main">CR в сделку</span></th>'+
+    '</tr><tr>'+
+    '<th style="border-left:2px solid var(--line);"><span class="th-sub">отработанные</span></th>'+
+    '<th><span class="th-sub">неотработанные</span></th>'+
+    '<th><span class="th-sub">разрыв</span></th>'+
+    '<th style="border-left:2px solid var(--line);"><span class="th-sub">отработанные</span></th>'+
+    '<th><span class="th-sub">неотработанные</span></th>'+
+    '<th><span class="th-sub">разрыв</span></th>'+
+    '</tr></thead><tbody>';
+  order.forEach(reg=>{
+    const e=DATA.effect[reg], w=e['Отработанные'], c=e['Неотработанные'];
+    const upBr=w.br_p-c.br_p, upSd=w.sdl_p-c.sdl_p;
+    const ratioBr=c.br_p>0?(w.br_p/c.br_p):null, ratioSd=c.sdl_p>0?(w.sdl_p/c.sdl_p):null;
+    const isAll=reg==='Все регионы';
+    h+=`<tr${isAll?' class="total-row"':''}>
+      <td class="cell-name">${reg}</td>
+      <td style="border-left:2px solid var(--line);"><span class="pct-good">${fmt.pct(w.br_p,1)}</span> <span class="mono" style="color:var(--ink-faint);font-size:11px;">(${w.br}/${w.clients})</span></td>
+      <td><span class="mono">${fmt.pct(c.br_p,1)}</span> <span class="mono" style="color:var(--ink-faint);font-size:11px;">(${c.br}/${c.clients})</span></td>
+      <td class="uplift-cell uplift-pos">+${fmt.pct(upBr,1)}${ratioBr?` · ×${ratioBr.toFixed(1)}`:''}</td>
+      <td style="border-left:2px solid var(--line);"><span class="pct-good">${fmt.pct(w.sdl_p,1)}</span> <span class="mono" style="color:var(--ink-faint);font-size:11px;">(${w.sdl}/${w.clients})</span></td>
+      <td><span class="mono">${fmt.pct(c.sdl_p,1)}</span> <span class="mono" style="color:var(--ink-faint);font-size:11px;">(${c.sdl}/${c.clients})</span></td>
+      <td class="uplift-cell uplift-pos">+${fmt.pct(upSd,1)}${ratioSd?` · ×${ratioSd.toFixed(1)}`:''}</td>
+    </tr>`;
+  });
+  h+='</tbody>';
+  document.getElementById('t-effect').innerHTML=h;
+
+  const rBr=(W.br_p/C.br_p).toFixed(1), rSd=(W.sdl_p/C.sdl_p).toFixed(1);
+  document.getElementById('effect-note').innerHTML=
+    `<b>Вывод.</b> Отработанные заявки доходят до брони+ в ${rBr} раза чаще (${fmt.pct(W.br_p,1)} против ${fmt.pct(C.br_p,1)}) `+
+    `и до сделки — в ${rSd} раза чаще (${fmt.pct(W.sdl_p,1)} против ${fmt.pct(C.sdl_p,1)}), чем заявки, до которых обзвон не дошёл. `+
+    `Это и есть измеримый эффект инициативы. Неотработанные ${fmt.num(C.clients)} клиентов — это недополученные брони и сделки при текущей конверсии. `+
+    `Примечание: неотработанные заявки тоже дают ненулевой CR — часть клиентов доходит до брони сама, без обзвона.`;
+})();
+
+/* funnel */
+(()=>{
+  const stages=[
+    {name:'Выгрузка',v:DATA.total},
+    {name:'Отработано',v:DATA.obr},
+    {name:'Дозвонились',v:DATA.usp},
+    {name:'Бронь (клиентов)',v:DATA.br},
+    {name:'Сделка (клиентов)',v:DATA.sdl},
+  ];
+  const mx=stages[0].v;
+  document.getElementById('funnel-block').innerHTML=stages.map((s,i)=>{
+    const w=Math.max(s.v/mx*100,4);
+    const conv=i>0?fmt.pct(s.v/stages[i-1].v,1):'100%';
+    return `<div class="f-row">
+      <div class="f-stage">${s.name}</div>
+      <div class="f-bar-wrap"><div class="f-bar" style="width:0%" data-w="${w}">${fmt.num(s.v)}</div></div>
+      <div class="f-conv">${conv}</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.f-bar').forEach(b=>b.style.width=b.dataset.w+'%'),120);
+})();
+
+/* regions */
+(()=>{
+  const cols=[
+    {k:'name',m:'Регион',s:''},
+    {k:'total',m:'Заявок',s:'в базе'},
+    {k:'obr_p',m:'Отработано',s:'% и кол-во',pct:1,cnt:'obr'},
+    {k:'usp_p',m:'Дозвонились',s:'% от отработанных',pct:1,cnt:'usp'},
+    {k:'otm_p',m:'Отмены',s:'% клиентов',pct:1,cnt:'otm',bad:1},
+    {k:'br_p',m:'CR в бронь',s:'% клиентов',pct:2,cnt:'br'},
+    {k:'sdl_p',m:'CR в сделку',s:'% клиентов',pct:2,cnt:'sdl'},
+  ];
+  let h='<thead><tr>'+cols.map(c=>`<th><span class="th-main">${c.m}</span>${c.s?`<span class="th-sub">${c.s}</span>`:''}</th>`).join('')+'</tr></thead><tbody>';
+  DATA.regions.forEach(r=>{
+    h+='<tr>';
+    cols.forEach(c=>{
+      if(c.k==='name'){h+=`<td class="cell-name">${r.name}</td>`;}
+      else if(c.k==='total'){h+=`<td class="mono">${r.total}</td>`;}
+      else{
+        const p=c.pct===2?fmt.pct2(r[c.k]):fmt.pct(r[c.k],1);
+        const cls=c.bad?(r[c.k]<0.15?'pct-good':'pct-bad'):'pct-good';
+        h+=`<td><span class="${cls}">${p}</span> <span class="mono" style="color:var(--ink-faint);font-size:11px;">(${r[c.cnt]})</span></td>`;
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody>';
+  document.getElementById('t-regions').innerHTML=h;
+})();
+
+/* план / факт */
+(()=>{
+  const PF=DATA.planfact;
+  const order=['Казань','Уфа','Ростов','Воронеж','Екатеринбург','Total'];
+  const months=[{k:'apr',name:'Апрель'},{k:'may',name:'Май'}];
+  let cur='apr', proj=false;
+
+  function pctClass(v){return v>=1?'hi':(v>=0.6?'mid':'lo');}
+  function pctText(v){return Math.round(v*100)+'%';}
+  function fmtPct(v){return (v*100).toFixed(1).replace('.',',')+'%';}
+  function fmtNum(n){return n.toLocaleString('ru-RU');}
+
+  // Универсальный билдер таблицы план/факт по двум метрикам.
+  // m1, m2 — { label, planKey, factKey, projKey | null, isPct, subHint }
+  function buildTable(m1, m2, useProj){
+    const cols = [m1, m2];
+    let h='<thead><tr>'+
+      '<th><span class="th-main">Регион</span></th>';
+    cols.forEach((m, i)=>{
+      const factHdr = m.projKey && useProj ? 'прогноз' : 'факт';
+      const factSub = m.projKey && useProj ? '<span class="th-sub">по дозреванию</span>'
+                                            : (m.subHint? `<span class="th-sub">${m.subHint}</span>` : '');
+      const border = i>0 ? ' style="border-left:2px solid var(--line);"' : '';
+      h += `<th${border}><span class="th-main">${m.label} план</span></th>`+
+           `<th><span class="th-main">${m.label} ${factHdr}</span>${factSub}</th>`+
+           `<th><span class="th-main">% выполн.</span><span class="th-sub">${m.label}</span></th>`;
+    });
+    h += '</tr></thead><tbody>';
+
+    order.forEach(reg=>{
+      const r = PF[reg][cur];
+      const isTot = reg==='Total';
+      const name = isTot ? 'Все регионы' : reg;
+      h += `<tr${isTot?' class="total-row"':''}><td class="cell-name">${name}</td>`;
+      cols.forEach((m, i)=>{
+        const plan = r[m.planKey];
+        const fKey = (m.projKey && useProj) ? m.projKey : m.factKey;
+        const fact = r[fKey];
+        const v = (plan && plan>0) ? (fact/plan) : 0;
+        const planTxt = m.isPct ? fmtPct(plan) : fmtNum(plan);
+        const factTxt = m.isPct ? fmtPct(fact) : fmtNum(fact);
+        const projBadge = (m.projKey && useProj) ? '<span class="pf-proj-badge">прогн.</span>' : '';
+        const border = i>0 ? ' style="border-left:2px solid var(--line);"' : '';
+        h += `<td class="mono"${border}>${planTxt}</td>`+
+             `<td class="mono">${factTxt}${projBadge}</td>`+
+             `<td class="pf-bar-cell">
+                <span class="pf-pct ${v>=1?'pct-good':(v>=0.6?'':'pct-bad')}">${pctText(v)}</span>
+                <span class="pf-track"></span><span class="pf-fill ${pctClass(v)}" style="width:${Math.min(v*100,100)}%"></span>
+              </td>`;
+      });
+      h += '</tr>';
+    });
+    h += '</tbody>';
+    return h;
+  }
+
+  function render(){
+    // вкладки месяцев
+    document.getElementById('pf-tabs').innerHTML = months.map(m=>
+      `<div class="pf-tab ${m.k===cur?'active':''}" data-m="${m.k}">${m.name} 2026</div>`).join('');
+    document.querySelectorAll('.pf-tab').forEach(t=>t.onclick=()=>{cur=t.dataset.m;render();});
+    // тумблер
+    const sw = document.getElementById('pf-switch');
+    sw.className = 'tg-switch'+(proj?' on':'');
+    document.getElementById('tg-label-fact').className = 'tg-label'+(proj?'':' active');
+    document.getElementById('tg-label-proj').className = 'tg-label'+(proj?' active':'');
+    sw.onclick = ()=>{ proj=!proj; render(); };
+
+    // прогноз — только для мая
+    const useProj = proj && cur==='may';
+    const factSubHint = cur==='may' ? `на ${DATA.proj_days.split(' ')[0]}.05` : '';
+
+    // Таблица 1: Новые ФБ + Уники в работе.
+    // Прогноз есть только для Новых ФБ (это поток за месяц). Уники — снимок состояния, без прогноза.
+    document.getElementById('t-pf-funnel').innerHTML = buildTable(
+      {label:'Новые ФБ',      planKey:'nfp', factKey:'nff', projKey:'nff_proj', isPct:false, subHint:factSubHint},
+      {label:'Уник. активные', planKey:'uap', factKey:'uaf', projKey:null,       isPct:false, subHint:factSubHint},
+      useProj
+    );
+
+    // Таблица 2: Сделки + CR
+    document.getElementById('t-pf-result').innerHTML = buildTable(
+      {label:'Сделки', planKey:'sp',  factKey:'sf',  projKey:'sf_proj', isPct:false, subHint:factSubHint},
+      {label:'CR',     planKey:'crp', factKey:'crf', projKey:null,      isPct:true,  subHint:factSubHint},
+      useProj
+    );
+
+    // Карточка декомпозиции прогноза — только для мая в режиме прогноза
+    const decompCard = document.getElementById('pf-decomp-card');
+    if(useProj){
+      decompCard.style.display = '';
+      const fm = DATA.forecast_meta;
+      const decompOrder = ['Казань','Уфа','Ростов','Воронеж','Екатеринбург','Total'];
+      let h = '<thead><tr>'+
+        '<th><span class="th-main">Регион</span></th>'+
+        '<th><span class="th-main">Факт</span><span class="th-sub">на 27.05</span></th>'+
+        '<th style="border-left:2px solid var(--line);"><span class="th-main">Активные брони</span><span class="th-sub">штук на 25.05</span></th>'+
+        '<th><span class="th-main">CR хвоста</span><span class="th-sub">март+апрель avg</span></th>'+
+        '<th><span class="th-main">+ к сделкам</span><span class="th-sub">от активных</span></th>'+
+        '<th style="border-left:2px solid var(--line);"><span class="th-main">Прогноз</span><span class="th-sub">сделок к 31.05</span></th>'+
+        '<th><span class="th-main">% к плану</span></th>'+
+        '</tr></thead><tbody>';
+      decompOrder.forEach(reg=>{
+        const c = fm.components[reg];
+        const isTot = reg==='Total';
+        const name = isTot ? 'Все регионы' : reg;
+        const v = c.forecast / c.plan;
+        h += `<tr${isTot?' class="total-row"':''}>
+          <td class="cell-name">${name}</td>
+          <td class="mono">${c.fact}</td>
+          <td class="mono" style="border-left:2px solid var(--line);">${c.active_now}</td>
+          <td class="mono">${fmtPct(c.cr)}</td>
+          <td class="mono"><b>+${Math.round(c.add_active)}</b></td>
+          <td class="mono" style="border-left:2px solid var(--line);"><b>${c.forecast}</b></td>
+          <td class="mono ${v>=1?'pct-good':(v>=0.6?'':'pct-bad')}"><b>${pctText(v)}</b></td>
+        </tr>`;
+      });
+      h += '</tbody>';
+      document.getElementById('t-pf-decomp').innerHTML = h;
+    } else {
+      decompCard.style.display = 'none';
+    }
+
+    // комментарий
+    const t = PF['Total'];
+    const note = document.getElementById('pf-note');
+    if(cur==='apr'){
+      note.innerHTML = `<b>Апрель — план перевыполнен по всем метрикам.</b> Новых ФБ ${fmtNum(t.apr.nff)} против плана ${fmtNum(t.apr.nfp)} (${pctText(t.apr.nff/t.apr.nfp)}), уников в работе ${fmtNum(t.apr.uaf)}/${fmtNum(t.apr.uap)} (${pctText(t.apr.uaf/t.apr.uap)}), сделок ${t.apr.sf}/${t.apr.sp} (${pctText(t.apr.sf/t.apr.sp)}), CR ${fmtPct(t.apr.crf)} при плане ${fmtPct(t.apr.crp)}. Месяц закрыт — прогноз для него совпадает с фактом.`;
+    } else if(useProj){
+      const fm = DATA.forecast_meta;
+      const c = fm.components.Total;
+      note.innerHTML = `<b>Май — прогноз по&nbsp;историческому дозреванию бронирований.</b> К&nbsp;факту на&nbsp;${DATA.proj_days.split(' ')[0]}.05 (${c.fact} сделок) добавлены сделки, которые ещё успеют закрыться до&nbsp;31.05 из&nbsp;уже существующих активных бронирований: <b>${c.active_now} броней</b> в&nbsp;статусе «Бронирование*» на&nbsp;${fm.crm_date}, ещё без&nbsp;ДДУ. К&nbsp;ним применён региональный <b>«CR хвоста месяца»</b> — усреднённая по&nbsp;марту и&nbsp;апрелю доля бронирований, активных на&nbsp;26-е число, которая успевала получить ДДУ в&nbsp;последние 5&nbsp;дней. Итого <b>+${Math.round(c.add_active)} сделок</b> → прогноз ${c.forecast}/${c.plan} (${pctText(c.forecast/c.plan)}). Новые бронирования, которые ещё появятся за&nbsp;26–31.05, в&nbsp;прогноз не&nbsp;включены — это консервативная оценка снизу.`;
+    } else {
+      note.innerHTML = `<b>Май — факт на&nbsp;${DATA.proj_days.split(' ')[0]}.05.</b> Новых ФБ ${fmtNum(t.may.nff)}/${fmtNum(t.may.nfp)} (${pctText(t.may.nff/t.may.nfp)}), уников в&nbsp;работе ${fmtNum(t.may.uaf)}/${fmtNum(t.may.uap)} (${pctText(t.may.uaf/t.may.uap)}), сделок ${t.may.sf}/${t.may.sp} (${pctText(t.may.sf/t.may.sp)}), CR ${fmtPct(t.may.crf)} при&nbsp;плане ${fmtPct(t.may.crp)}. Месяц незакрыт — включите «Прогноз» для&nbsp;оценки итогов по&nbsp;историческому дозреванию бронирований.`;
+    }
+  }
+  render();
+})();
+
+</script>
+</body>
+</html>
